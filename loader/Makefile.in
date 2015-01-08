@@ -1,0 +1,33 @@
+MODCFLAGS = @BUILTINFLAG@
+EXTRALIBS = @LIBPTHREAD@
+
+C_SRCS = \
+	main.c \
+	preloader.c
+
+PROGRAMS = \
+	wine \
+	wine-installed \
+	wine-preloader \
+	wine.inf \
+	wine_info.plist \
+	wine64 \
+	wine64-preloader
+
+MANPAGES = \
+	wine.de.UTF-8.man.in \
+	wine.fr.UTF-8.man.in \
+	wine.man.in \
+	wine.pl.UTF-8.man.in
+
+INSTALLDIRS = \
+	$(DESTDIR)$(bindir) \
+	$(DESTDIR)$(datadir)/wine
+
+@MAKE_RULES@
+
+@LOADER_RULES@
+
+# Make sure that make_makefiles sees the generated rules
+install install-lib::
+clean::

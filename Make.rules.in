@@ -1,0 +1,124 @@
+# Global rules shared by all makefiles     -*-Makefile-*-
+#
+# Each individual makefile may define the following variables:
+# C_SRCS       : C sources for the module
+# OBJC_SRCS    : Objective-C sources for the module
+# RC_SRCS      : resource source files
+# EXTRA_OBJS   : extra object files
+# IMPORTS      : dlls to import
+# DELAYIMPORTS : dlls to import in delayed mode
+# MODCFLAGS    : extra CFLAGS for this module
+
+# First some useful definitions
+
+DEFS         = -D__WINESRC__ $(EXTRADEFS)
+ALLCFLAGS    = $(DEFS) $(DLLFLAGS) $(EXTRACFLAGS) $(CPPFLAGS) $(CFLAGS) $(MODCFLAGS)
+IDLFLAGS     = $(DEFS) $(EXTRAIDLFLAGS)
+RCFLAGS      = --nostdinc $(PORCFLAGS) $(TARGETFLAGS) $(DEFS) $(EXTRARCFLAGS)
+
+IDL_GEN_C_SRCS  = $(IDL_C_SRCS:.idl=_c.c) $(IDL_I_SRCS:.idl=_i.c) \
+                  $(IDL_P_SRCS:.idl=_p.c) $(IDL_S_SRCS:.idl=_s.c)
+
+CLEAN_FILES   = *.o *.a *.so *.res *.fake *.ok *.tab.[ch] *.yy.c
+CLEAN_TARGETS = $(MODULE) $(IMPORTLIB:%=lib%.@IMPLIBEXT@) $(XTEMPLATE_SRCS:.x=.h) \
+                $(TESTMODULE) $(TESTMODULE_STRIPPED) $(CROSSTESTMODULE)
+
+OBJS = $(C_SRCS:.c=.o) $(BISON_SRCS:.y=.tab.o) $(LEX_SRCS:.l=.yy.o) $(IDL_GEN_C_SRCS:.c=.o) $(OBJC_SRCS:.m=.o) \
+       $(IDL_R_SRCS:.idl=_r.res) $(IDL_TLB_RES) $(RC_SRCS:.rc=.res) $(MC_SRCS:.mc=.res) $(EXTRA_OBJS)
+
+CROSSOBJS = $(OBJS:.o=.cross.o)
+ALLCROSSCFLAGS = $(DEFS) -DWINE_CROSSTEST $(CPPFLAGS) $(CFLAGS)
+
+# Implicit rules
+
+@MAINTAINER_MODE@.SUFFIXES: .sfd .ttf .svg .ico .bmp
+
+.sfd.ttf:
+	$(FONTFORGE) -script $(top_srcdir)/fonts/genttf.ff $< $@
+
+.svg.ico:
+	CONVERT="$(CONVERT)" ICOTOOL="$(ICOTOOL)" RSVG="$(RSVG)" $(BUILDIMAGE) $< $@
+
+.svg.bmp:
+	CONVERT="$(CONVERT)" ICOTOOL="$(ICOTOOL)" RSVG="$(RSVG)" $(BUILDIMAGE) $< $@
+
+# Rules for main module
+
+$(MODULE) $(MODULE:%=%.so) $(MODULE:%=%.fake): $(MAINSPEC) $(OBJS)
+	$(WINEGCC) $(APPMODE) $(MODULEFLAGS) $(OBJS) -o $@ $(DELAYIMPORTS:%=-l%) $(IMPORTS:%=-l%) $(DELAYIMPORTS:%=-Wb,-d%) -lwine $(LIBPORT) $(EXTRALIBS) $(LDFLAGS) $(LIBS)
+
+# Rules for static libraries
+
+all: $(STATICLIB)
+
+$(STATICLIB): $(OBJS)
+	$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+	$(RANLIB) $@
+
+$(STATICLIB:.a=.cross.a): $(CROSSOBJS)
+	$(RM) $@
+	$(CROSSAR) $(ARFLAGS) $@ $(CROSSOBJS)
+	$(CROSSRANLIB) $@
+
+# Rules for import libraries
+
+$(IMPORTLIB:%=lib%.def.a): $(IMPLIB_SRCS:.c=.o)
+	$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(IMPLIB_SRCS:.c=.o)
+	$(RANLIB) $@
+
+$(IMPORTLIB:%=lib%.a): $(MAINSPEC) $(IMPLIB_SRCS:.c=.o)
+	$(WINEBUILD) $(TARGETFLAGS) -w --implib -o $@ --export $(srcdir)/$(MAINSPEC) $(IMPLIB_SRCS:.c=.o)
+
+$(IMPORTLIB:%=lib%.cross.a): $(MAINSPEC) $(IMPLIB_SRCS:.c=.cross.o)
+	$(WINEBUILD) $(CROSSTARGET:%=-b %) -w --implib -o $@ --export $(srcdir)/$(MAINSPEC) $(IMPLIB_SRCS:.c=.cross.o)
+
+# Rules for dependencies
+
+DEPEND_SRCS = $(C_SRCS) $(OBJC_SRCS) $(RC_SRCS) $(MC_SRCS) \
+              $(IDL_H_SRCS) $(IDL_C_SRCS) $(IDL_I_SRCS) $(IDL_P_SRCS) $(IDL_S_SRCS) $(IDL_R_SRCS) $(IDL_TLB_SRCS) \
+              $(BISON_SRCS) $(LEX_SRCS) $(EXTRA_OBJS) $(MANPAGES)
+
+depend: dummy
+	$(MAKEDEP) $(MAKEDEPFLAGS) -C$(srcdir) -S$(top_srcdir) -T$(top_builddir) $(PARENTSRC:%=-P%) $(EXTRAINCL) $(DEPEND_SRCS)
+
+.PHONY: depend
+
+# Rules for tests
+
+$(TESTMODULE) $(TESTMODULE:%=%.so): $(OBJS)
+	$(WINEGCC) $(APPMODE) $(OBJS) -o $@ $(IMPORTS:%=-l%) $(LDFLAGS) $(LIBS)
+
+$(TESTMODULE_STRIPPED): $(OBJS)
+	$(WINEGCC) -s -Wb,-F,$(TESTMODULE) $(APPMODE) $(OBJS) -o $@ $(IMPORTS:%=-l%) $(LDFLAGS) $(LIBS)
+
+$(CROSSTESTMODULE): $(CROSSOBJS)
+	$(CROSSWINEGCC) $(CROSSOBJS) -o $@ $(IMPORTS:%=-l%) $(LDFLAGS) $(LIBS)
+
+$(WINETEST_RES): $(TESTMODULE_STRIPPED)
+	echo "$(TESTMODULE) TESTRES \"$(TESTMODULE_STRIPPED)\"" | $(WRC) $(RCFLAGS) -o $@
+
+# Rules for man pages
+
+all: $(MANPAGES:.man.in=.man)
+
+.PHONY: install-man-pages
+
+# Rules for cleaning
+
+clean::
+	$(RM) $(CLEAN_FILES) $(CLEAN_TARGETS) $(PROGRAMS)
+
+.PHONY: clean
+
+# Rules for installing
+
+$(INSTALLDIRS):
+	$(MKDIR_P) -m 755 $@
+
+install install-lib install-dev uninstall::
+
+.PHONY: install install-lib install-dev uninstall
+
+# End of global rules

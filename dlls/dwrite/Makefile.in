@@ -1,0 +1,12 @@
+MODULE    = dwrite.dll
+IMPORTLIB = dwrite
+IMPORTS   = user32 gdi32
+
+C_SRCS = \
+	analyzer.c \
+	font.c \
+	gdiinterop.c \
+	layout.c \
+	main.c
+
+@MAKE_DLL_RULES@

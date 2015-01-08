@@ -1,0 +1,338 @@
+The Wine development release 1.7.8 is now available.
+
+What's new in this release (see below for details):
+  - Updated version of the Mono package.
+  - Improvements in the BITS service implementation.
+  - Better data tables for Japanese vertical fonts support.
+  - Improved backtraces on recent Mac OS X versions.
+  - Various bug fixes.
+
+The source is available from the following locations:
+
+  http://prdownloads.sourceforge.net/wine/wine-1.7.8.tar.bz2
+  http://mirrors.ibiblio.org/wine/source/1.7/wine-1.7.8.tar.bz2
+
+Binary packages for various distributions will be available from:
+
+  http://www.winehq.org/download
+
+You will find documentation on http://www.winehq.org/documentation
+
+You can also get the current source directly from the git
+repository. Check http://www.winehq.org/git for details.
+
+Wine is available thanks to the work of many people. See the file
+AUTHORS in the distribution for the complete list.
+
+----------------------------------------------------------------
+
+Bugs fixed in 1.7.8 (total 27):
+
+  14034  Max Payne 2: mirror reflections not working correctly
+  20085  Settlers of Catan runs very slow.
+  21020  Artrage3 studio pro demo : installer hangs.
+  21481  Runtime error in RPG Maker VX
+  22633  zMUD works in background but UI is not visible
+  23551  Ignition display hangs when changing resolution
+  27398  Debug4x: Application locks/crashes at start due to bad symbol font handling (failed default charset/map selection)
+  28846  foobar2000 needs SHELL32.dll.SHOpenFolderAndSelectItems
+  29153  NSIS ExecWait not working
+  31593  Regression from wine 1.5.4; same bug as 24679
+  31600  YGOPRO 1.032.1 V2 Percy (free online dueling system made for playing Yu-Gi-Oh! duel) crashes during gameplay
+  33248  The Walking Dead: Survival Instinct error with glTexSubImage2D
+  34467  Age of Empires 2 Conquerors is no longer playable
+  34547  Very slow performance. StarCraft: Brood War.
+  34613  Hot Corners are active when using programs in fullscreen mode (the mac driver)
+  34721  Resident Evil 3: there's no music, some sounds are missing
+  34813  winedbg crash reports are missing important information on Mac OS X 10.8+
+  34979  Sigil 0.6.2 crashes on start
+  34983  Fellowship One Check-In Application v2.5 needs IBackgroundCopyJob::SetDescription method
+  34984  Original War: intense screen flickering
+  34988  Fellowship One Check-In Application v2.5 needs IBackgroundCopyManager::GetJob method
+  35010  [Freetype]Impossible to compile Wine
+  35021  League of Legends installer page faults in custom action during stackwalk (SymFromAddr with NULL displacement ptr)
+  35024  FEAR Combat (SEC2) v1.1 community full installer doesn't display cd key/serial field (no PIDTemplate property provided)
+  35030  Steam Client update from Dec. 3, 2013 breaks Wine (Steam Client/Service crash after update, login fails)
+  35035  HF pAppLoc (AppLocale) installer crashes due to unimplemented function apphelp.dll.ShimFlushCache
+  35039  Wine out-of-source tree build broken when specifying a full path to configure
+
+----------------------------------------------------------------
+
+Changes since 1.7.7:
+
+Akira Nakagawa (1):
+      po: Update Japanese translation.
+
+Alexandre Julliard (11):
+      configure: Add a rule to prevent rebuilding makedep when tools are disabled.
+      makefiles: Only output tools directory dependencies when tools are enabled.
+      makefiles: Don't make binaries depend on Makefile.in.
+      msvcp71: Use thiscall where appropriate in the header file.
+      msvcp90: Use thiscall where appropriate in the header file.
+      msxml3/tests: Avoid including xmldom.h.
+      makefiles: Make sure config.h is updated before building anything.
+      configure: Update FreeType configure checks for the changed headers location.
+      makefiles: Include AUTHORS file directly from the top-level directory.
+      makedep: Don't look for header files in the build directories.
+      makedep: Allow the source directory itself in include paths.
+
+Andrey Gusev (4):
+      d3d11: Add version.rc file.
+      d3dcompiler_43: Fix a typo.
+      po: Some Ukrainian translation updates and typo fixes.
+      po: Small Ukrainian translation fix.
+
+André Hentschel (11):
+      winedump: Update minidump output.
+      winedbg: Update minidump output.
+      wininet/tests: Fix boolean checks.
+      ole32/tests: Don't crash when StgOpenStorage fails.
+      ddrawex/tests: Don't crash when IDirectDraw4 query fails.
+      winefile: Use defines instead of numbers.
+      comctl32/tests: Make rebar.c compile with -D__WINESRC__.
+      comctl32/tests: Make toolbar.c compile with -D__WINESRC__.
+      propsys: Add stub for PSGetPropertyDescriptionListFromString.
+      include: Add bdaiface.idl.
+      comctl32/tests: Make trackbar.c compile with -D__WINESRC__.
+
+Aric Stewart (3):
+      tools: Build vertical orientation table.
+      gdi32: Use vertical orientation table to determine rotation.
+      wineps: Use vertical orientation table to determine rotation.
+
+Aurimas Fišeras (1):
+      po: Update Lithuanian translation.
+
+Austin English (2):
+      xcopy: Clarify a comment.
+      apphelp: Add a stub for ShimFlushCache.
+
+Bruno Jesus (1):
+      po: Update Brazilian Portuguese translation.
+
+Daniel Lehman (1):
+      msvcrt: Return wall-clock time from clock().
+
+François Gouget (7):
+      libport: Add an isfinite() implementation for Solaris.
+      xcopy: Add tests to show that the /D option only accepts dates in the m-d-y format.
+      comctl32: TTM_ADDTOOLW must refuse to set a tooltip text to NULL.
+      msvcrt: Standardize on using a comparison operator to ensure we return 0 or 1.
+      winecfg: Tweak the wording of the drives configuration.
+      libport: Fix the detection of isfinite().
+      ddraw/tests: Fix compilation on systems that don't support nameless unions.
+
+Frédéric Delanoy (30):
+      comctl32: Clarify DATETIME_GetPrevDateField documentation.
+      kernel32: Use BOOL type where appropriate.
+      rsaenh: Use BOOL type where appropriate.
+      system.drv16: Use BOOL type where appropriate.
+      rsaenh/tests: Use BOOL type where appropriate.
+      stress.dll16: Use BOOL type where appropriate.
+      twain_32: Use BOOL type where appropriate.
+      strmbase: Use BOOL type where appropriate.
+      version: Use BOOL type where appropriate.
+      user.exe16: Use BOOL type where appropriate.
+      winhttp/tests: Use BOOL type where appropriate.
+      wininet: Use BOOL type where appropriate.
+      wininet/tests: Use BOOL type where appropriate.
+      winmm: Use BOOL type where appropriate.
+      wintab32: Use BOOL type where appropriate.
+      winecrt0: Use BOOL type where appropriate.
+      winejoystick.drv: Use BOOL type where appropriate.
+      winemac.drv: Use BOOL type where appropriate.
+      winex11.drv: Use BOOL type where appropriate.
+      twain_32: Ensure FreeLibrary is called on error case (coverity).
+      winealsa.drv: Use BOOL type where appropriate.
+      mshtml: Avoid memory leaks (Coverity).
+      rpcrt4: Use BOOL type where appropriate.
+      Assorted spelling fixes.
+      po: Update French translation.
+      winedump: Make usage message more consistent.
+      winedump: Use BOOL type where appropriate.
+      shlwapi/tests: Avoid memory leaks (coverity).
+      winedump: Use BOOL type where appropriate.
+      wininet/tests: Use BOOL type where appropriate.
+
+Hans Leidekker (3):
+      mlang: Improve IMLangLineBreakConsole::BreakLineA for the ASCII codepage.
+      advapi32: Perform a case-insensitive match on the credential target name.
+      msi: Fix handling of empty mask edit templates.
+
+Henri Verbeet (46):
+      wined3d: Just validate the sysmem location in surface_init().
+      wined3d: Just use surface_invalidate_location() in surface_map().
+      wined3d: Get rid of surface_set_dirty().
+      ddraw: Only reset the device when creating an exclusive mode front buffer in ddraw_surface_create_texture().
+      ddraw: Don't bother checking for DDSD_CAPS in CreateSurface().
+      ddraw: Don't set the pixelformat's dwSize field in CreateSurface().
+      ddraw: Don't bother unsetting DDSCAPS2_MIPMAPSUBLEVEL in CreateSurface().
+      ddraw: Don't bother setting *surface to NULL in CreateSurface().
+      ddraw: Move the TEXTUREMANAGE validation from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Move the cube map validation from CreateSurface() to ddraw_surface_create_texture().
+      wined3d: Merge the texture creation functions.
+      ddraw: Move the location validation from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Create back buffers in ddraw_surface_create_texture().
+      ddraw: Move the primary surface validation from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Move the flippable validation from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Move the DDSD_LPSURFACE fixups from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Move the DDSD_CAPS fixup from CreateSurface() to ddraw_surface_create_texture().
+      ddraw: Make the DDSURFACEDESC2 parameter to ddraw_surface_create_texture() const.
+      ddraw: Get rid of CreateSurface().
+      ddraw: Get rid of copy_to_surfacedesc2().
+      wined3d: Properly check for the front buffer in d3dfmt_get_conv().
+      ddraw: Use hr_ddraw_from_wined3d() in ddraw_surface_create().
+      ddraw: Get rid of the DDSCAPS_BACKBUFFER validation in ddraw_surface_create().
+      ddraw/tests: Add some missing DestroyWindow() calls.
+      ddraw/tests: Unify the skip messages a bit.
+      ddraw/tests: Add a surface flipping test.
+      ddraw: Only set DDSCAPS_PRIMARYSURFACE on the root surface.
+      ddraw: Only set DDSCAPS_VISIBLE on the root surface.
+      ddraw: Only set DDSCAPS_FRONTBUFFER on flippable surfaces.
+      ddraw: Return the correct error in ddraw_surface7_Flip() when the surface is not flippable.
+      ddraw: Reject flips of surfaces with themselves.
+      ddraw: Attach the first surface in the swap chain to the last one.
+      ddraw: Validate that surfaces are on the same swap chain in ddraw_surface7_Flip().
+      ddraw: Reject explicitly creating a flippable front buffer.
+      ddraw: Reject creating primary surfaces with DDSCAPS_TEXTURE.
+      ddraw: Require DDSCAPS_FLIP and DDSCAPS_COMPLEX to be used together.
+      ddraw: Require a non-zero back buffer count for swap chains.
+      ddraw/tests: Add a test for primary surface capabilities.
+      ddraw: Implement flips inside ddraw.
+      ddraw: Properly flip through the swap chain in ddraw_surface7_Flip().
+      wined3d: Get rid of the buffer_object_size field from struct wined3d_buffer.
+      wined3d: Create volumes inside wined3d.
+      wined3d: Pass a wined3d_resource_desc structure to volume_init().
+      wined3d: Set the volume container in volume_init().
+      wined3d: Print the WINED3D_SWAP_EFFECT_FLIP FIXME only once.
+      ddraw: Properly swap the wined3d texture parent in ddraw_surface7_Flip().
+
+Huw D. M. Davies (5):
+      ntdll: Don't reduce the size of the local buffer when we come to read another batch of entries.
+      kernel32: Give the non-wildcard case a chance of succeeding first time around.
+      riched20: Move the various selection setting methods to a common function.
+      riched20: Remove some over-zealous calls to clear the insert style.
+      wordpad: Pass the correct window to the font size list validator.
+
+Jacek Caban (6):
+      vbscript: Added support for VT_BYREF|VT_VARIANT to to_int.
+      vbscript: Don't allow OP_dim on already initialized arrays.
+      mshtml/tests: Ignore QI(&IID_IWebBrowserPriv2IE8XP) calls.
+      mshtml: Strip hash part before combining URIs.
+      mshtml: Use uri_nofrag instead of full URI in navigate_anchor.
+      sspi.h: Added some missing declarations.
+
+Julian Rüger (1):
+      po: Update German translation.
+
+Ken Thomases (7):
+      winemac: Move test for valid GL drawable into -[WineContentView addGLContext:].
+      winemac: Clear OpenGL views to black the first time a context is attached.
+      winemac: Include the OpenGL headers to fix building on OS X 10.9.
+      dbghelp: Fix some parameter names and types in the Mach-O support.
+      dbghelp: Add debug logging to some error paths in the Mach-O support.
+      ntdll: On Mac, store the dyld image info address in the PEB.
+      dbghelp: For Mach-O, get the address of the process's image info from its PEB.
+
+Lauri Kenttä (2):
+      po: Update Finnish translation.
+      po: Update Swedish translation.
+
+Marcus Meissner (1):
+      netapi32: Added missing breaks (Coverity).
+
+Michael Stefaniuc (6):
+      comctl32/tests: Make tab.c compile with -D__WINESRC__.
+      comctl32/tests: Make monthcal.c compile with -D__WINESRC__.
+      quartz: Cast to the correct type instead to void pointer.
+      comctl32/tests: Avoid non-AW aware TreeView_*() macros.
+      comctl32/tests: Make treeview.c compile with -D__WINESRC__.
+      comctl32/tests: Finally compile with -D__WINESRC__.
+
+Nikolay Bogoychev (2):
+      wined3d: Recognize Haswell mobile graphics 4600.
+      wined3d: Recognize GeForce GTX 765M.
+
+Nikolay Sivov (26):
+      kernel32: Add more LoadLibraryEx() flags defines and mark them as unsupported.
+      qmgr: Implement IBackgroundCopyJob::SetDescription().
+      qmgr: Implement IBackgroundCopyJob::GetDescription().
+      qmgr/tests: Remove skips around tests that don't fail.
+      qmgr: Implement IBackgroundCopyManager::GetJob().
+      qmgr: Added parameter tracing for Job and Manager, make naming more compact.
+      urlmon/tests: Accept another failure error code.
+      qmgr: Use helper to return string value for File.
+      qmgr: Added missing argument tracing, method naming made more compact.
+      qmgr: Implement Get/SetNotifyFlags().
+      qmgr/tests: Do an early check to skip all tests.
+      include: Added IBackgroundCopyCallback2 definition.
+      qmgr: Implement Get/SetNotifyInterface().
+      qmgr/tests: Fixed some test failures on older windows versions.
+      ntdll: Allow NULL return length argument in NtAdjustPrivilegesToken().
+      qmgr: Implement AddFile() with AddFileSet().
+      qmgr: Add file to a job with 1 refcount.
+      qmgr: Rearrange BSC methods in a natural way, call with proper wrapper.
+      ole32: Trace library path to be added to list.
+      ole32: COM cleanup for StdMarshal.
+      ole32: Use existing code to return IMarshal from CoGetStandardMarshal().
+      ole32: Explicitly check for S_OK.
+      ole32: COM cleanup of IEnumGUID implementations.
+      ole32: Use private define for char length of GUID string representation.
+      ole32: Store categories with offset so it's possible to copy them directly.
+      ole32: Fix refcount of returned enumeration instances.
+
+Piotr Caban (10):
+      qcap: Add AVI Mux output pin stub.
+      include: Add IAMStreamControl definition.
+      strmbase: Add structure size parameter in BaseInputPin_Construct function.
+      qcap: Add AVI Mux input pin stub.
+      strmbase: Don't pass NULL fetched parameter in BaseOutputPinImpl_Connect on external IPin implementation.
+      qcap: Add Avi Mux filter EnumMediaTypes tests.
+      qcap: Add Avi Mux input pin ReceiveConnection test.
+      qcap: Constify vtables in Avi Mux tests.
+      qcap: Add helper to initalize test_filter structure.
+      qcap: Fix Avi Mux output pin Connect implementation.
+
+Qian Hong (1):
+      arp: Added stub exe.
+
+Ričardas Barkauskas (4):
+      wininet/tests: Test successive HttpSendRequest calls.
+      wininet: Reset data stream for existing request connections.
+      wininet: Move handling of existing request connections to open_http_connection.
+      wininet/tests: Mark successful query of status before sending request as broken.
+
+Stefan Dösinger (17):
+      d3d9/tests: Read the result before swapping in volume_v16u16_test.
+      d3d8/tests: Read the result before swapping in volume_v16u16_test.
+      wined3d: Discard non-sysmem locations in unload.
+      wined3d: Don't set SFLAG_INSYSMEM in surface_download_data.
+      wined3d: Use the pointer returned by map in wined3d_surface_getdc.
+      wined3d: Don't store PBO pointers in allocatedMemory.
+      wined3d: Add a function to retrieve surface data.
+      wined3d: Use surface_get_memory in read_from_framebuffer.
+      wined3d: Remove redundant state restoration from read_from_framebuffer.
+      wined3d: Don't pass the pitch to read_from_framebuffer.
+      wined3d: Remove a useless comment.
+      ddraw/tests: Port test_set_surface_desc to other versions.
+      ddraw: SetSurfaceDesc is not allowed on managed textures.
+      ddraw: SetSurfaceDesc accepts DDSD_CAPS with dwCaps=0.
+      ddraw: Check for lpSurface=NULL in SetSurfaceDesc.
+      ddraw/tests: Test SetSurfaceDesc and Lock interaction.
+      d3d9/tests: Extend the sysmem texture mipmap test.
+
+Stefan Leichter (1):
+      dbghelp: Add a null check for optional output parameter for function SymFromAddr.
+
+Vincent Povirk (7):
+      gdiplus: Forward GdipFillRectangle to GdipFillRectangles.
+      gdiplus: Write FillRects records to metafiles.
+      gdiplus: Implement FillRects record playback.
+      gdiplus: Set world transform when drawing metafiles.
+      gdiplus: Add metafile test for FillRectangles.
+      windowscodecs: Don't treat S_FALSE as failure.
+      mscoree: Update Wine Mono to 4.5.2.
+
+--
+Alexandre Julliard
+julliard@winehq.org

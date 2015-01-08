@@ -1,0 +1,7 @@
+TESTDLL   = sti.dll
+IMPORTS   = uuid ole32
+
+C_SRCS = \
+	sti.c
+
+@MAKE_TEST_RULES@

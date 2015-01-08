@@ -1,0 +1,6 @@
+STATICLIB = libuuid.a
+
+C_SRCS = \
+	uuid.c
+
+@MAKE_IMPLIB_RULES@
